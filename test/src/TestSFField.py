@@ -1,6 +1,6 @@
 #############################################################################################
 #
-# SFField : Used to find field in a selenium based browser
+# Test SFField :
 #
 # Copyright (C) 2018  Kirk Larson
 #
@@ -20,30 +20,15 @@
 #############################################################################################
 
 
-from LocalLib.FieldInterface import FieldInterface
-from selenium.common.exceptions import NoSuchElementException
+from LocalLib.SFField import SFField
 from LocalLib.SeleniumShortcuts import SeleniumShortcuts
 
 
-class SFField(FieldInterface):
 
-    def __init__(self, name, selector_value, selector_type):
+def test_constructor():
+    """
+    Basic Constructor test
+    """
+    for type in SeleniumShortcuts.all_selectors():
+        SFField('name', "fred", type)
 
-        if not SeleniumShortcuts.is_selector(selector_type):
-            raise Exception("Unknown Selenium selector {}".format(selector_type))
-
-        super().__init__(name)
-        self.selector_value = selector_value
-        self.selector_type = selector_type
-
-    def get_element(self, driver):
-        """
-        Using the specified selector type & value locate the element
-        :param driver: the selenium webDriver
-        :return: the Element (if found)
-        """
-
-        try:
-            return driver.find_element(self.selector_type, self.selector_value)
-        except NoSuchElementException as e:
-            self.raise_not_found()

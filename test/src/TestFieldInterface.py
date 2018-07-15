@@ -1,5 +1,28 @@
-import unittest
+
+#############################################################################################
+#
+# Test FieldInterface :
+#
+# Copyright (C) 2018  Kirk Larson
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#############################################################################################
+
+
 from LocalLib.FieldInterface import FieldInterface
+import pytest
 
 
 class MockFieldInterface(FieldInterface):
@@ -14,40 +37,38 @@ class MockFieldInterface(FieldInterface):
         return self._get_value
 
 
-class TestFieldInterface(unittest.TestCase):
-
-    def test_constructor(self):
-        """
-        Basic Constructor test
-        :return:
-        """
-        name = "fred"
-        a = FieldInterface(name)
-        self.assertEqual(name, a.name)
-        self.assertIsNone(a.error)
-        self.assertIsNone(a.get_error())
-
-    def test_get_raise_error(self):
-        field = FieldInterface('fred')
-        with self.assertRaises(NotImplementedError):
-            field.get_value()
-
-    def test_is_valid_raise_error(self):
-        field = FieldInterface('fred')
-        with self.assertRaises(NotImplementedError):
-            field.is_valid()
-
-    def test_dummy_get_value_found(self):
-        field = MockFieldInterface('fred')
-        field.set_get_value('boris')
-        self.assertEqual('boris', field.get_value())
-        self.assertTrue(field.is_valid())
-
-    def test_dummy_get_value_not_found(self):
-        field = MockFieldInterface('fred')
-        field.set_get_value(None)
-        self.assertFalse(field.is_valid())
 
 
-if __name__ == '__main__':
-    unittest.main()
+def test_constructor():
+    """
+    Basic Constructor test
+    :return:
+    """
+    name = "fred"
+    a = FieldInterface(name)
+    assert name == a.name
+    assert a.error is None
+    assert a.get_error() is None
+
+def test_get_raise_error():
+    field = FieldInterface('fred')
+    with pytest.raises(NotImplementedError):
+        field.get_value()
+
+def test_is_valid_raise_error():
+    field = FieldInterface('fred')
+    with pytest.raises(NotImplementedError):
+        field.is_valid()
+
+def test_dummy_get_value_fselfound():
+    field = MockFieldInterface('fred')
+    field.set_get_value('boris')
+    assert 'boris' == field.get_value()
+    assert field.is_valid()
+
+def test_dummy_get_value_not_found():
+    field = MockFieldInterface('fred')
+    field.set_get_value(None)
+    assert not field.is_valid()
+
+
