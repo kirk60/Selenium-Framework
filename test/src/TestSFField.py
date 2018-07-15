@@ -22,7 +22,20 @@
 
 from LocalLib.SFField import SFField
 from LocalLib.SeleniumShortcuts import SeleniumShortcuts
+from LocalLib.SFBrowser.SFChromeBrowser import SFChromeBrowser
+from TestResources.TestResManager import TestResManager
+import selenium.webdriver.common.by
+import pytest
 
+
+# import selenium.webdriver.common.by
+
+
+@pytest.fixture(scope="module", autouse=True)
+def create_browser():
+    pytest.common_browser = SFChromeBrowser()
+    yield
+    pytest.common_browser.close()
 
 
 def test_constructor():
@@ -32,3 +45,13 @@ def test_constructor():
     for type in SeleniumShortcuts.all_selectors():
         SFField('name', "fred", type)
 
+
+@pytest.mark.parametrize("match_string,match_type,expected", [
+    ("simple_class", selenium.webdriver.common.by.By.CLASS_NAME, 'simple class text'),
+])
+def test_all_selectors(match_string, match_type, expected):
+    browser = pytest.common_browser
+    browser.get(TestResManager.web_resource_url('simple_page'))
+    field = SFField('bob', match_string, match_type)
+    elem = field.get_element(browser)
+    assert elem.text == expected
