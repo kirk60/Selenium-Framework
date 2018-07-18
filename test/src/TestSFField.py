@@ -24,7 +24,6 @@ from LocalLib.SFField import SFField
 from LocalLib.SeleniumShortcuts import SeleniumShortcuts
 from LocalLib.SFBrowser.SFChromeBrowser import SFChromeBrowser
 from TestResources.TestResManager import TestResManager
-import selenium.webdriver.common.by
 import pytest
 
 
@@ -42,16 +41,33 @@ def test_constructor():
     """
     Basic Constructor test
     """
-    for type in SeleniumShortcuts.all_selectors():
+    for type in SeleniumShortcuts.all_selectors_long():
         SFField('name', "fred", type)
 
 
 @pytest.mark.parametrize("match_string,match_type,expected", [
-    ("simple_class", selenium.webdriver.common.by.By.CLASS_NAME, 'simple class text'),
+    ("simple_class", 'class', 'simple class text'),
+    ("body > div:nth-child(3)", 'css', 'simple css text'),
+    ("id_field", 'id', 'simple id text'),
+    ("simple linktext text", 'linktext', 'simple linktext text'),
+    ("name_field", 'name', 'simple name text'),
+    ("partlink", 'partlink', 'simple partlink text'),
+    ("textarea", 'tag', 'simple textarea text'),
+    ("/html/body/div[5]", 'xpath', 'simple xpath text'),
 ])
 def test_all_selectors(match_string, match_type, expected):
+    """
+    basic test of selectors, using full selector description & the short form
+    :param match_string: selenium match pattern
+    :param match_type: selenium match type (eg css...)
+    :param expected: Text that is in the field
+    :return:
+    """
     browser = pytest.common_browser
     browser.get(TestResManager.web_resource_url('simple_page'))
     field = SFField('bob', match_string, match_type)
+    elem = field.get_element(browser)
+    assert elem.text == expected
+    field = SFField('bob', match_string, SeleniumShortcuts.get_selector(match_type))
     elem = field.get_element(browser)
     assert elem.text == expected

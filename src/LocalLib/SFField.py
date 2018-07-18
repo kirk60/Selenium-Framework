@@ -29,12 +29,10 @@ class SFField(FieldInterface):
 
     def __init__(self, name, selector_value, selector_type):
 
-        if not SeleniumShortcuts.is_selector(selector_type):
-            raise Exception("Unknown Selenium selector {}".format(selector_type))
+        self.selector_type = SeleniumShortcuts.get_selector(selector_type)
 
         super().__init__(name)
         self.selector_value = selector_value
-        self.selector_type = selector_type
 
     def get_element(self, driver):
         """

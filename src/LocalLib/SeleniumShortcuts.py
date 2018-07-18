@@ -21,21 +21,38 @@ import selenium.webdriver.common.by
 
 class SeleniumShortcuts(object):
 
-    valid_selectors = [
-        selenium.webdriver.common.by.By.CLASS_NAME,
-        selenium.webdriver.common.by.By.CSS_SELECTOR,
-        selenium.webdriver.common.by.By.ID,
-        selenium.webdriver.common.by.By.LINK_TEXT,
-        selenium.webdriver.common.by.By.NAME,
-        selenium.webdriver.common.by.By.PARTIAL_LINK_TEXT,
-        selenium.webdriver.common.by.By.TAG_NAME,
-        selenium.webdriver.common.by.By.XPATH
-    ]
+    selector_map = {
+        'class': selenium.webdriver.common.by.By.CLASS_NAME,
+        'css' : selenium.webdriver.common.by.By.CSS_SELECTOR,
+        'id' : selenium.webdriver.common.by.By.ID,
+        'linktext' : selenium.webdriver.common.by.By.LINK_TEXT,
+        'name' : selenium.webdriver.common.by.By.NAME,
+        'partlink' : selenium.webdriver.common.by.By.PARTIAL_LINK_TEXT,
+        'tag' : selenium.webdriver.common.by.By.TAG_NAME,
+        'xpath' : selenium.webdriver.common.by.By.XPATH
+    }
+
 
     @staticmethod
     def is_selector(sel):
-        return sel in SeleniumShortcuts.valid_selectors
+        return sel in SeleniumShortcuts.selector_map.values()
 
     @staticmethod
-    def all_selectors():
-        return SeleniumShortcuts.valid_selectors
+    def all_selectors_long():
+        return SeleniumShortcuts.selector_map.values()
+
+    @staticmethod
+    def all_selectors_short():
+        return SeleniumShortcuts.selector_map.keys()
+
+    @staticmethod
+    def get_selector(name):
+        if name in SeleniumShortcuts.all_selectors_short():
+            return SeleniumShortcuts.selector_map[name]
+
+        if name in SeleniumShortcuts.all_selectors_long():
+            return name
+
+        raise LookupError("Unknown selector type '{}'".format(name))
+
+
