@@ -27,12 +27,25 @@ from LocalLib.SeleniumShortcuts import SeleniumShortcuts
 
 class SFField(FieldInterface):
 
-    def __init__(self, name, selector_value, selector_type):
+    def __init__(self, name, selector_type, selector_value, required='False', ref=None):
+        """
+
+        :param name: name of the field
+        :param selector_value: The string that the selector will match
+        :param selector_type: EG css, name ...
+        :param required: Is this a required field
+        :param ref: some sort of reference as to why the field is here
+        """
 
         self.selector_type = SeleniumShortcuts.get_selector(selector_type)
 
         super().__init__(name)
         self.selector_value = selector_value
+        self.required = required
+        self.ref = ref
+
+    def to_string(self):
+        return "{},{},{},{},{},".format(self.name, self.selector_type, self.selector_value, self.required, self.ref)
 
     def get_element(self, driver):
         """
@@ -43,5 +56,20 @@ class SFField(FieldInterface):
 
         try:
             return driver.find_element(self.selector_type, self.selector_value)
+        except NoSuchElementException as e:
+            self.raise_not_found()
+
+    #
+    #   ?? to consider .. should this be here or get_element from an array based Field ?
+    #
+    def get_elements(self, driver):
+        """
+        Using the specified selector type & value locate the matching elements
+        :param driver: the selenium webDriver
+        :return: the Element (if found)
+        """
+
+        try:
+            return driver.find_elements(self.selector_type, self.selector_value)
         except NoSuchElementException as e:
             self.raise_not_found()

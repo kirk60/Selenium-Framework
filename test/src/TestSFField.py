@@ -42,7 +42,7 @@ def test_constructor():
     Basic Constructor test
     """
     for type in SeleniumShortcuts.all_selectors_long():
-        SFField('name', "fred", type)
+        SFField('name', type, "fred")
 
 
 @pytest.mark.parametrize("match_string,match_type,expected", [
@@ -65,9 +65,33 @@ def test_all_selectors(match_string, match_type, expected):
     """
     browser = pytest.common_browser
     browser.get(TestResManager.web_resource_url('simple_page'))
-    field = SFField('bob', match_string, match_type)
+
+    #
+    #   test using supplied (short) string
+    #
+    field = SFField('bob', match_type, match_string)
     elem = field.get_element(browser)
     assert elem.text == expected
-    field = SFField('bob', match_string, SeleniumShortcuts.get_selector(match_type))
+
+    #
+    #   test using selenium match string
+    #
+    field = SFField('bob', SeleniumShortcuts.get_selector(match_type), match_string)
     elem = field.get_element(browser)
     assert elem.text == expected
+
+    #
+    #   test using supplied (short) string and multiple return items
+    #
+    field = SFField('bob', match_type, match_string)
+    elems = field.get_elements(browser)
+    assert len(elems) > 0
+    assert elems[0].text == expected
+
+    #
+    #   test using selenium match string and multiple items
+    #
+    field = SFField('bob', SeleniumShortcuts.get_selector(match_type), match_string)
+    elems = field.get_elements(browser)
+    assert len ( elems ) > 0
+    assert elems[0].text == expected
