@@ -1,4 +1,3 @@
-
 #############################################################################################
 #
 # Test FieldInterface :
@@ -37,8 +36,6 @@ class MockFieldInterface(FieldInterface):
         return self._get_value
 
 
-
-
 def test_constructor():
     """
     Basic Constructor test
@@ -50,25 +47,27 @@ def test_constructor():
     assert a.error is None
     assert a.get_error() is None
 
+
 def test_get_raise_error():
     field = FieldInterface('fred')
     with pytest.raises(NotImplementedError):
         field.get_value()
+
 
 def test_is_valid_raise_error():
     field = FieldInterface('fred')
     with pytest.raises(NotImplementedError):
         field.is_valid()
 
-def test_dummy_get_value_fselfound():
+
+def test_dummy_get_value_found():
     field = MockFieldInterface('fred')
     field.set_get_value('boris')
     assert 'boris' == field.get_value()
     assert field.is_valid()
 
+
 def test_dummy_get_value_not_found():
     field = MockFieldInterface('fred')
     field.set_get_value(None)
     assert not field.is_valid()
-
-

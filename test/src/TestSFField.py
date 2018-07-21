@@ -39,7 +39,7 @@ def create_browser():
 
 def test_constructor():
     """
-    Basic Constructor test
+    Basic Constructor test, If this fails then nothing else will work
     """
     for type in SeleniumShortcuts.all_selectors_long():
         SFField('name', type, "fred")
@@ -70,28 +70,12 @@ def test_all_selectors(match_string, match_type, expected):
     #   test using supplied (short) string
     #
     field = SFField('bob', match_type, match_string)
-    elem = field.get_element(browser)
-    assert elem.text == expected
+    field.get_element(browser)
+    assert field.get_value(browser) == expected
 
     #
     #   test using selenium match string
     #
     field = SFField('bob', SeleniumShortcuts.get_selector(match_type), match_string)
-    elem = field.get_element(browser)
-    assert elem.text == expected
-
-    #
-    #   test using supplied (short) string and multiple return items
-    #
-    field = SFField('bob', match_type, match_string)
-    elems = field.get_elements(browser)
-    assert len(elems) > 0
-    assert elems[0].text == expected
-
-    #
-    #   test using selenium match string and multiple items
-    #
-    field = SFField('bob', SeleniumShortcuts.get_selector(match_type), match_string)
-    elems = field.get_elements(browser)
-    assert len ( elems ) > 0
-    assert elems[0].text == expected
+    field.get_element(browser)
+    assert field.get_value(browser) == expected

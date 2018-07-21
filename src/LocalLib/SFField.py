@@ -59,17 +59,5 @@ class SFField(FieldInterface):
         except NoSuchElementException as e:
             self.raise_not_found()
 
-    #
-    #   ?? to consider .. should this be here or get_element from an array based Field ?
-    #
-    def get_elements(self, driver):
-        """
-        Using the specified selector type & value locate the matching elements
-        :param driver: the selenium webDriver
-        :return: the Element (if found)
-        """
-
-        try:
-            return driver.find_elements(self.selector_type, self.selector_value)
-        except NoSuchElementException as e:
-            self.raise_not_found()
+    def get_value(self, driver):
+        return self.get_element(driver).text

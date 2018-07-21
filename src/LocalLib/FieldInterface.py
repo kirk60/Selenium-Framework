@@ -58,13 +58,22 @@ class FieldInterface(object):
         """
         return self.error
 
-    def get_value(self):
+    def get_value(self,driver):
         """
         Implementation dependent. Get record value.
         :return:
         """
         self.reset_error()
         raise NotImplementedError()
+
+    def get_element(self,driver):
+        """
+        Implementation dependent. Get record value.
+        :return:
+        """
+        self.reset_error()
+        raise NotImplementedError()
+
 
     def is_valid(self):
         """
