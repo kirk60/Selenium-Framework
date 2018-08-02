@@ -1,6 +1,6 @@
 #############################################################################################
 #
-# Test SFField :
+# Test Factory For ArrayField :
 #
 # Copyright (C) 2018  Kirk Larson
 #
@@ -20,7 +20,7 @@
 #############################################################################################
 
 
-from LocalLib.SFArrayField import SFArrayField
+from LocalLib.SFFieldFactory import SFFieldFactory
 from LocalLib.SeleniumShortcuts import SeleniumShortcuts
 from LocalLib.SFBrowser.SFChromeBrowser import SFChromeBrowser
 from TestResources.TestResManager import TestResManager
@@ -37,17 +37,12 @@ def create_browser():
     pytest.common_browser.close()
 
 
-def test_constructor():
-    """
-    Basic Constructor test, If this fails then nothing else will work
-    """
-    for type in SeleniumShortcuts.all_selectors_long():
-        SFArrayField('name', type, "fred")
-
-def test_simple_selector():
+def test_simple_selectors():
     browser = pytest.common_browser
     browser.get(TestResManager.web_resource_url('simple_select'))
-    field = SFArrayField('bob', SeleniumShortcuts.get_selector("name"), "simple_select[]")
+    match_type = "name"
+    match_string = "simple_select[]"
+    field = SFFieldFactory.create( "array_{},{},{},{}".format(match_type,'bob' ,match_type,match_string) )
     assert len(field.get_element(browser)) == 6
 
 
@@ -67,7 +62,10 @@ def test_simple_selector_values(index,expect):
     """
     browser = pytest.common_browser
     browser.get(TestResManager.web_resource_url('simple_select'))
-    field = SFArrayField('bob', SeleniumShortcuts.get_selector("name"), "simple_select[]")
+    match_type = "name"
+    match_string = "simple_select[]"
+
+    field = SFFieldFactory.create( "array_{},{},{},{}".format(match_type,'bob' ,match_type,match_string) )
     elem = field.get_element(browser,index)
     assert not isinstance(elem,list)
     assert expect == field.get_value(browser,index)
@@ -98,15 +96,7 @@ def test_all_selectors(match_string, match_type, expected):
     #
     #   test using supplied (short) string
     #
-    field = SFArrayField('bob', match_type, match_string)
-    assert isinstance(field.get_element(browser),list)
-    assert not isinstance(field.get_element(browser,0),list)
-    assert field.get_value(browser,0) == expected
-
-    #
-    #   test using supplied (short) string
-    #
-    field = SFArrayField("{},{},{}".format('bob', match_type, match_string))
+    field = SFFieldFactory.create( "array_{},{},{},{}".format(match_type,'bob' ,match_type,match_string) )
     assert isinstance(field.get_element(browser),list)
     assert not isinstance(field.get_element(browser,0),list)
     assert field.get_value(browser,0) == expected
@@ -115,7 +105,8 @@ def test_all_selectors(match_string, match_type, expected):
     #
     #   test using selenium match string
     #
-    field = SFArrayField('bob', SeleniumShortcuts.get_selector(match_type), match_string)
+    match_type = SeleniumShortcuts.get_selector(match_type)
+    field = SFFieldFactory.create( "array_{},{},{},{}".format(match_type,'bob' ,match_type,match_string) )
     assert isinstance(field.get_element(browser),list)
     assert not isinstance(field.get_element(browser,0),list)
     assert field.get_value(browser,0) == expected

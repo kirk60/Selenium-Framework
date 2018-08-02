@@ -31,22 +31,22 @@ class SFFieldFactory(object):
 
     @staticmethod
     def create(argument):
-        fields = argument.split(",")
+        fields = argument.split(",", 1)
+        type = fields[0]
+
         if fields[0] in SFFieldFactory.factories:
-            return SFFieldFactory.factories[fields[0]](fields[1:])
+            return SFFieldFactory.factories[fields[0]](fields[1])
         return None
+
 
 #
 #   defaults are to add all selectors as selector long/short name
 #   and the same as an array
 #
 for name in SeleniumShortcuts.all_selectors_long():
-    SFFieldFactory.addFactory(name,SFField)
-    SFFieldFactory.addFactory("array_" + name,SFArrayField)
+    SFFieldFactory.addFactory(name, SFField)
+    SFFieldFactory.addFactory("array_" + name, SFArrayField)
 
 for name in SeleniumShortcuts.all_selectors_short():
-    SFFieldFactory.addFactory(name,SFField)
-    #SFFieldFactory.addFactory("array_" + nSFFieldFactory.factoriesame,SFArrayField)
-
-
-a = SFFieldFactory.create("class,")
+    SFFieldFactory.addFactory(name, SFField)
+    SFFieldFactory.addFactory("array_" + name, SFArrayField)

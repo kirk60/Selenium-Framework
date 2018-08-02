@@ -1,6 +1,6 @@
 #############################################################################################
 #
-# Test SFField :
+# Test Factory For Field :
 #
 # Copyright (C) 2018  Kirk Larson
 #
@@ -23,6 +23,8 @@
 from LocalLib.SFFieldFactory import SFFieldFactory
 from LocalLib.SFBrowser.SFChromeBrowser import SFChromeBrowser
 from TestResources.TestResManager import TestResManager
+from LocalLib.SeleniumShortcuts import SeleniumShortcuts
+
 import pytest
 
 
@@ -38,13 +40,13 @@ def create_browser():
 
 @pytest.mark.parametrize("match_string,match_type,expected", [
     ("simple_class", 'class', 'simple class text'),
-    #("body > div:nth-child(3)", 'css', 'simple css text'),
-    #("id_field", 'id', 'simple id text'),
-    #("simple linktext text", 'linktext', 'simple linktext text'),
-    #("name_field", 'name', 'simple name text'),
-    #("partlink", 'partlink', 'simple partlink text'),
-    #("textarea", 'tag', 'simple textarea text'),
-    #("/html/body/div[5]", 'xpath', 'simple xpath text'),
+    ("body > div:nth-child(3)", 'css', 'simple css text'),
+    ("id_field", 'id', 'simple id text'),
+    ("simple linktext text", 'linktext', 'simple linktext text'),
+    ("name_field", 'name', 'simple name text'),
+    ("partlink", 'partlink', 'simple partlink text'),
+    ("textarea", 'tag', 'simple textarea text'),
+    ("/html/body/div[5]", 'xpath', 'simple xpath text'),
 ])
 def test_all_selectors(match_string, match_type, expected):
     """
@@ -65,8 +67,10 @@ def test_all_selectors(match_string, match_type, expected):
     assert field.get_value(browser) == expected
 
     #
-    #   test using selenium match string
+    #   test using long string
     #
-    #field = SFField('ob', SeleniumShortcuts.get_selector(match_type), match_string)
-    #field.get_element(browser)
-    #assert field.get_value(browser) == expected
+    match_type = SeleniumShortcuts.get_selector(match_type)
+    field = SFFieldFactory.create( "{},{},{},{}".format(match_type,'bob' ,match_type,match_string) )
+    field.get_element(browser)
+    assert field.get_value(browser) == expected
+
