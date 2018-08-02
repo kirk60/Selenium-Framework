@@ -1,6 +1,5 @@
-#############################################################################################
 #
-# SFField : Used to find field in a selenium based browser
+# LocalLib/SFArrayField
 #
 # Copyright (C) 2018  Kirk Larson
 #
@@ -17,15 +16,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#############################################################################################
+
+"""Selector that returns Multiple elements
+
+Some Web selectors return multiple elements, this is the simplest case
+1 ) All elements are returned by a single call to get_elements
+2 ) They are referenced by an index
 
 
-from LocalLib.FieldInterface import FieldInterface
+
+# Todo:
+
+"""
+
+
+from LocalLib.SFField import SFField
 from selenium.common.exceptions import NoSuchElementException
-from LocalLib.SeleniumShortcuts import SeleniumShortcuts
 
 
-class SFField(FieldInterface):
+class SFArrayField(SFField):
 
     def __init__(self, name, selector_type=None, selector_value=None, required='False', ref=None):
         """
@@ -36,37 +45,10 @@ class SFField(FieldInterface):
         :param required: Is this a required field
         :param ref: some sort of reference as to why the field is here
         """
+        super().__init__(name, selector_type, selector_value, required, ref)
 
-        #
-        #   barf .. Fake function overloading
-        #
-        #
-        if selector_type is None:
-            fields = name + ",,,,,"
-            fields = fields.split(',')
-            name = fields[0]
-            selector_type = fields[1]
-            selector_value = fields[2]
-            if len(fields[3]) == 0:
-                required = False
-            else:
-                required = fields[3]
-            if len(fields[3]) == 0:
-                ref = None
-            else:
-                ref = fields[4]
-
-
-        super().__init__(name)
-        self.selector_type = SeleniumShortcuts.get_selector(selector_type)
-        self.selector_value = selector_value
-        self.required = required
-        self.ref = ref
-
-    def to_string(self,name =None):
-        if name is None:
-            name = "SFField"
-        return "{} : {},{},{},{},{},".format(name,self.name, self.selector_type, self.selector_value, self.required, self.ref)
+    def to_string(self,name ="SFArrayField"):
+        return super.to_string(name)
 
     def get_element(self, driver, reference=None):
         """
@@ -77,7 +59,10 @@ class SFField(FieldInterface):
         """
 
         try:
-            return driver.find_element(self.selector_type, self.selector_value)
+            values = driver.find_elements(self.selector_type, self.selector_value)
+            if reference is None:
+                return values
+            return values[reference]
         except NoSuchElementException as e:
             self.raise_not_found()
 
@@ -88,4 +73,4 @@ class SFField(FieldInterface):
         :param reference: (optional) Identifier of the specific item (where the element is not enough)
         :return: Selenium Element
         """
-        return self.get_element(driver).text
+        return self.get_element(driver, reference).text

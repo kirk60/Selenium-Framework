@@ -20,7 +20,7 @@
 #############################################################################################
 
 
-from LocalLib.SFField import SFField
+from LocalLib.SFArrayField import SFArrayField
 from LocalLib.SeleniumShortcuts import SeleniumShortcuts
 from LocalLib.SFBrowser.SFChromeBrowser import SFChromeBrowser
 from TestResources.TestResManager import TestResManager
@@ -42,7 +42,35 @@ def test_constructor():
     Basic Constructor test, If this fails then nothing else will work
     """
     for type in SeleniumShortcuts.all_selectors_long():
-        SFField('name', type, "fred")
+        SFArrayField('name', type, "fred")
+
+def test_simple_selector_values(index,text):
+    browser = pytest.common_browser
+    browser.get(TestResManager.web_resource_url('simple_select'))
+    field = SFArrayField('bob', SeleniumShortcuts.get_selector("name"), "simple_select[]")
+    assert len(field.get_element(browser)) == 5
+
+
+@pytest.mark.parametrize("index,expect", [
+    (0,'option 0'),
+    (1,'option 1'),
+    (2,'option 2'),
+    (3,'option 3'),
+    (4,'option 4'),
+    (5,'option 5'),
+])
+def test_simple_selector_values(index,expect):
+    """
+    Test against a simple HTML multi select, each item has the name value "simple_select[]"
+    :param index: select index
+    :param expect: The Text in the matching item
+    """
+    browser = pytest.common_browser
+    browser.get(TestResManager.web_resource_url('simple_select'))
+    field = SFArrayField('bob', SeleniumShortcuts.get_selector("name"), "simple_select[]")
+    elem = field.get_element(browser,index)
+    assert not isinstance(elem,list)
+    assert expect == field.get_value(browser,index)
 
 
 @pytest.mark.parametrize("match_string,match_type,expected", [
@@ -58,10 +86,11 @@ def test_constructor():
 def test_all_selectors(match_string, match_type, expected):
     """
     basic test of selectors, using full selector description & the short form
+    For array items this should return a list by default, or the actual element
+    if an index is specified
     :param match_string: selenium match pattern
     :param match_type: selenium match type (eg css...)
     :param expected: Text that is in the field
-    :return:
     """
     browser = pytest.common_browser
     browser.get(TestResManager.web_resource_url('simple_page'))
@@ -69,20 +98,24 @@ def test_all_selectors(match_string, match_type, expected):
     #
     #   test using supplied (short) string
     #
-    field = SFField('bob', match_type, match_string)
-    field.get_element(browser)
-    assert field.get_value(browser) == expected
+    field = SFArrayField('bob', match_type, match_string)
+    assert isinstance(field.get_element(browser),list)
+    assert not isinstance(field.get_element(browser,0),list)
+    assert field.get_value(browser,0) == expected
+
+    #
+    #   test using supplied (short) string
+    #
+    field = SFArrayField("{},{},{}".format('bob', match_type, match_string))
+    assert isinstance(field.get_element(browser),list)
+    assert not isinstance(field.get_element(browser,0),list)
+    assert field.get_value(browser,0) == expected
+
 
     #
     #   test using selenium match string
     #
-    field = SFField('bob', SeleniumShortcuts.get_selector(match_type), match_string)
-    field.get_element(browser)
-    assert field.get_value(browser) == expected
-
-    #
-    #   test using single param string
-    #
-    field = SFField( '{},{},{}'.format('bob', match_type, match_string))
-    field.get_element(browser)
-    assert field.get_value(browser) == expected
+    field = SFArrayField('bob', SeleniumShortcuts.get_selector(match_type), match_string)
+    assert isinstance(field.get_element(browser),list)
+    assert not isinstance(field.get_element(browser,0),list)
+    assert field.get_value(browser,0) == expected

@@ -26,7 +26,6 @@ class FieldNotFoundError(Exception):
 
 
 class FieldInterface(object):
-
     error = None
 
     def __init__(self, name):
@@ -58,33 +57,37 @@ class FieldInterface(object):
         """
         return self.error
 
-    def get_value(self,driver):
+    def get_value(self, driver, reference=None):
         """
-        Implementation dependent. Get record value.
-        :return:
-        """
-        self.reset_error()
-        raise NotImplementedError()
-
-    def get_element(self,driver):
-        """
-        Implementation dependent. Get record value.
-        :return:
+        return the value of the specified element
+        :param driver: Selenium Driver
+        :param reference: (optional) Identifier of the specific item (where the element is not enough)
+        :return: text string
         """
         self.reset_error()
         raise NotImplementedError()
 
+    def get_element(self, driver, reference=None):
+        """
+        return the specified element
+        :param driver: Selenium Driver
+        :param reference: (optional) Identifier of the specific item (where the element is not enough)
+        :return: Selenium Element
+        """
+        self.reset_error()
+        raise NotImplementedError()
 
-    def is_valid(self):
+    def is_valid(self, driver):
         """
         Check the validity of the field.
         If getting the field value returns an error (other than NotFound) then
         the error is propagated
 
+        :param driver: Selenium Driver
         :return: True if field is valid, False otherwise
         """
         try:
-            self.get_value()
+            self.get_value(driver)
         except FieldNotFoundError:
             return False
 

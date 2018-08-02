@@ -30,7 +30,7 @@ class MockFieldInterface(FieldInterface):
     def set_get_value(self, value):
         self._get_value = value
 
-    def get_value(self):
+    def get_value(self , driver ):
         if self._get_value is None:
             self.raise_not_found()
         return self._get_value
@@ -51,23 +51,23 @@ def test_constructor():
 def test_get_raise_error():
     field = FieldInterface('fred')
     with pytest.raises(NotImplementedError):
-        field.get_value()
+        field.get_value(None)
 
 
 def test_is_valid_raise_error():
     field = FieldInterface('fred')
     with pytest.raises(NotImplementedError):
-        field.is_valid()
+        field.is_valid(1)
 
 
 def test_dummy_get_value_found():
     field = MockFieldInterface('fred')
     field.set_get_value('boris')
-    assert 'boris' == field.get_value()
-    assert field.is_valid()
+    assert 'boris' == field.get_value(1)
+    assert field.is_valid(1)
 
 
 def test_dummy_get_value_not_found():
     field = MockFieldInterface('fred')
     field.set_get_value(None)
-    assert not field.is_valid()
+    assert not field.is_valid(1)
