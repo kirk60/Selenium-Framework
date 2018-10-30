@@ -23,7 +23,7 @@
 from LocalLib.SFFieldFactory import SFFieldFactory
 from LocalLib.SeleniumShortcuts import SeleniumShortcuts
 from LocalLib.SFBrowser.SFChromeBrowser import SFChromeBrowser
-from TestResources.TestResManager import TestResManager
+from TestResManager import TestResManager
 import pytest
 
 

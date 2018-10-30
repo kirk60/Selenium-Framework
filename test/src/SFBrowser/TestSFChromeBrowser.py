@@ -22,7 +22,7 @@
 
 
 from LocalLib.SFBrowser.SFChromeBrowser import SFChromeBrowser
-from TestResources.TestResManager import TestResManager
+from TestResManager import TestResManager
 
 
 def test_constructor():
