@@ -38,9 +38,10 @@ class FieldInterface(object):
         :param message: Error Message
         :return: Raises an error so no return ...
         """
-        self.error = message
         if message is None:
             self.error = "Unable to find field {}".format(self.name)
+        else:
+            self.error = message
         raise FieldNotFoundError(self.error)
 
     def reset_error(self):
@@ -52,7 +53,6 @@ class FieldInterface(object):
 
     def get_error(self):
         """
-
         :return: The last error message
         """
         return self.error
