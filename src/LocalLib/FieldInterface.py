@@ -19,18 +19,24 @@
 #
 #############################################################################################
 
-
 class FieldNotFoundError(Exception):
     def __init__(self, message):
         super().__init__(message)
 
 
+   
 class FieldInterface(object):
     error = None
+    def_timeout = 5 
 
-    def __init__(self, name):
+    def __init__(self, name,timeout=None):
         self.name = name
         self.reset_error()
+
+        if timeout == None: 
+            self.timeout = FieldInterface.def_timeout
+        else:
+            self.timeout = timeout
 
     def raise_not_found(self, message=None):
         """
@@ -50,24 +56,38 @@ class FieldInterface(object):
         :return:
         """
         self.error = None
+        
+    def get_timeout(self,timeout=None):
+        if timeout == None:
+            return self.timeout
+        return timeout  
 
     def get_error(self):
         """
-        :return: The last error message
+        :return: The last error messageget_value
         """
         return self.error
 
-    def get_value(self, driver, reference=None):
+    def get_value(self, driver, reference=None,timeout=None):
         """
         return the value of the specified element
         :param driver: Selenium Driver
         :param reference: (optional) Identifier of the specific item (where the element is not enough)
         :return: text string
         """
-        self.reset_error()
+        return self.get_element(driver, reference,timeout).text
+
+    def _get_element(self, driver, reference=None,timeout=None):
+        """FieldNotFoundError
+        low level implementation of get_element
+        :param driver: Selenium Driver
+        :param reference: (optional) Identifier of the specific item (where the element is not enough)
+        :return: Selenium Element
+        """
         raise NotImplementedError()
 
-    def get_element(self, driver, reference=None):
+
+    def get_element(self, driver, reference=None,timeout=None):
         """
         return the specified element
         :param driver: Selenium Driver
@@ -75,9 +95,9 @@ class FieldInterface(object):
         :return: Selenium Element
         """
         self.reset_error()
-        raise NotImplementedError()
+        return self._get_element( driver, reference,timeout)
 
-    def is_valid(self, driver):
+    def is_valid(self, driver, reference=None,timeout=None):
         """
         Check the validity of the field.
         If getting the field value returns an error (other than NotFound) then
@@ -87,7 +107,7 @@ class FieldInterface(object):
         :return: True if field is valid, False otherwise
         """
         try:
-            self.get_value(driver)
+            self.get_element(driver, reference,timeout)
         except FieldNotFoundError:
             return False
 

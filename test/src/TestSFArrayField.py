@@ -99,6 +99,7 @@ def test_all_selectors(match_string, match_type, expected):
     #   test using supplied (short) string
     #
     field = SFArrayField('bob', match_type, match_string)
+    a = field.get_element(browser)
     assert isinstance(field.get_element(browser),list)
     assert not isinstance(field.get_element(browser,0),list)
     assert field.get_value(browser,0) == expected

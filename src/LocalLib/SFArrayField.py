@@ -50,11 +50,12 @@ class SFArrayField(SFField):
     def to_string(self,name ="SFArrayField"):
         return super.to_string(name)
 
-    def get_element(self, driver, reference=None):
+    def _get_element(self, driver, reference=None,timeout=None):
         """
         return the specified element
         :param driver: Selenium Driver
         :param reference: (optional) Identifier of the specific item (where the element is not enough)
+        :param timeout: (optional) number of seconds for timeout
         :return: Selenium Element
         """
 
@@ -63,14 +64,7 @@ class SFArrayField(SFField):
             if reference is None:
                 return values
             return values[reference]
+        
         except NoSuchElementException as e:
             self.raise_not_found()
 
-    def get_value(self, driver, reference=None):
-        """
-        return the specified elements text value
-        :param driver: Selenium Driver
-        :param reference: (optional) Identifier of the specific item (where the element is not enough)
-        :return: Selenium Element
-        """
-        return self.get_element(driver, reference).text
