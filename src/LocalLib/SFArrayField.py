@@ -50,7 +50,7 @@ class SFArrayField(SFField):
     def to_string(self,name ="SFArrayField"):
         return super.to_string(name)
 
-    def _get_element(self, driver, reference=None,timeout=None):
+    def _get_element(self, driver, reference=None):
         """
         return the specified element
         :param driver: Selenium Driver

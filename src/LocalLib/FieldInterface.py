@@ -27,7 +27,7 @@ class FieldNotFoundError(Exception):
    
 class FieldInterface(object):
     error = None
-    def_timeout = 5 
+    def_timeout = 0
 
     def __init__(self, name,timeout=None):
         self.name = name
@@ -77,7 +77,7 @@ class FieldInterface(object):
         """
         return self.get_element(driver, reference,timeout).text
 
-    def _get_element(self, driver, reference=None,timeout=None):
+    def _get_element(self, driver, reference=None):
         """FieldNotFoundError
         low level implementation of get_element
         :param driver: Selenium Driver
@@ -92,10 +92,21 @@ class FieldInterface(object):
         return the specified element
         :param driver: Selenium Driver
         :param reference: (optional) Identifier of the specific item (where the element is not enough)
+        :param timeout : (options) Number of seconds to wait
         :return: Selenium Element
         """
         self.reset_error()
-        return self._get_element( driver, reference,timeout)
+
+        working_timeout = self.get_timeout(timeout)
+        if working_timeout != 0 :
+            driver.implicitly_wait(self.get_timeout(timeout))
+
+        ret_val = self._get_element( driver, reference)
+        
+        if working_timeout != 0 :
+            driver.implicitly_wait(0)
+        
+        return ret_val
 
     def is_valid(self, driver, reference=None,timeout=None):
         """
