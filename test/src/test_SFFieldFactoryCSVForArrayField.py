@@ -54,7 +54,7 @@ def test_simple_selectors():
     (4,'option 4'),
     (5,'option 5'),
 ])
-def test_simple_selector_values(index,expect):
+def test_simple_selector_values(indexcreate,expect):
     """
     Test against a simple HTML multi select, each item has the name value "simple_select[]"
     :param index: select index
@@ -65,7 +65,7 @@ def test_simple_selector_values(index,expect):
     match_type = "name"
     match_string = "simple_select[]"
 
-    field = SFFieldFactory.create( "array_{},{},{},{}".format(match_type,'bob' ,match_type,match_string) )
+    field = SFFieldFactory.create_from_csv( "array_{},{},{},{}".format(match_type,'bob' ,match_type,match_string) )
     elem = field.get_element(browser,index)
     assert not isinstance(elem,list)
     assert expect == field.get_value(browser,index)
@@ -96,7 +96,7 @@ def test_all_selectors(match_string, match_type, expected):
     #
     #   test using supplied (short) string
     #
-    field = SFFieldFactory.create( "array_{},{},{},{}".format(match_type,'bob' ,match_type,match_string) )
+    field = SFFieldFactory.create_from_csv( "array_{},{},{},{}".format(match_type,'bob' ,match_type,match_string) )
     assert isinstance(field.get_element(browser),list)
     assert not isinstance(field.get_element(browser,0),list)
     assert field.get_value(browser,0) == expected
@@ -106,7 +106,7 @@ def test_all_selectors(match_string, match_type, expected):
     #   test using selenium match string
     #
     match_type = SeleniumShortcuts.get_selector(match_type)
-    field = SFFieldFactory.create( "array_{},{},{},{}".format(match_type,'bob' ,match_type,match_string) )
+    field = SFFieldFactory.create_from_csv( "array_{},{},{},{}".format(match_type,'bob' ,match_type,match_string) )
     assert isinstance(field.get_element(browser),list)
     assert not isinstance(field.get_element(browser,0),list)
     assert field.get_value(browser,0) == expected

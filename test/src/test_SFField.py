@@ -1,6 +1,6 @@
 #############################################################################################
 #
-# Test Factory For Field :
+# Test SFField :
 #
 # Copyright (C) 2018  Kirk Larson
 #
@@ -20,11 +20,10 @@
 #############################################################################################
 
 
-from LocalLib.SFFieldFactory import SFFieldFactory
+from LocalLib.SFField import SFField
+from LocalLib.SeleniumShortcuts import SeleniumShortcuts
 from LocalLib.SFBrowser.SFChromeBrowser import SFChromeBrowser
 from TestResManager import TestResManager
-from LocalLib.SeleniumShortcuts import SeleniumShortcuts
-
 import pytest
 
 
@@ -36,6 +35,14 @@ def create_browser():
     pytest.common_browser = SFChromeBrowser()
     yield
     pytest.common_browser.close()
+
+
+def test_constructor():
+    """
+    Basic Constructor test, If this fails then nothing else will work
+    """
+    for type in SeleniumShortcuts.all_selectors_long():
+        SFField('name', type, "fred")
 
 
 @pytest.mark.parametrize("match_string,match_type,expected", [
@@ -62,15 +69,20 @@ def test_all_selectors(match_string, match_type, expected):
     #
     #   test using supplied (short) string
     #
-    field = SFFieldFactory.create( "{},{},{},{}".format(match_type,'bob' ,match_type,match_string) )
+    field = SFField('bob', match_type, match_string)
     field.get_element(browser)
     assert field.get_value(browser) == expected
 
     #
-    #   test using long string
+    #   test using selenium match string
     #
-    match_type = SeleniumShortcuts.get_selector(match_type)
-    field = SFFieldFactory.create( "{},{},{},{}".format(match_type,'bob' ,match_type,match_string) )
+    field = SFField('bob', SeleniumShortcuts.get_selector(match_type), match_string)
     field.get_element(browser)
     assert field.get_value(browser) == expected
 
+    #
+    #   test using single param string
+    #
+    field = SFField( '{},{},{}'.format('bob', match_type, match_string))
+    field.get_element(browser)
+    assert field.get_value(browser) == expected
