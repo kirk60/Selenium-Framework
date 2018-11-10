@@ -1,6 +1,5 @@
-#############################################################################################
 #
-# FieldInterface : define a common interface for "fields"
+# LocalLib/SeleniumShortcuts : simple shortcuts for selenium
 #
 # Copyright (C) 2018  Kirk Larson
 #
@@ -16,20 +15,22 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#############################################################################################
+##########################################################################################
+
+
+from selenium import webdriver
+
 
 class FieldNotFoundError(Exception):
-    def __init__(self, message):
+    def __init__(self, message:str):
         super().__init__(message)
-
 
    
 class FieldInterface(object):
     error = None
     def_timeout = 0
 
-    def __init__(self, name,timeout=None):
+    def __init__(self, name:str,timeout:int=None):
         self.name = name
         self.reset_error()
 
@@ -38,11 +39,11 @@ class FieldInterface(object):
         else:
             self.timeout = timeout
 
-    def raise_not_found(self, message=None):
+    def raise_not_found(self, message:str=None):
         """
         Raise a Field Not found error
         :param message: Error Message
-        :return: Raises an error so no return ...
+        :return: Raises an error so no return ...integer
         """
         if message is None:
             self.error = "Unable to find field {}".format(self.name)
@@ -57,18 +58,23 @@ class FieldInterface(object):
         """
         self.error = None
         
-    def get_timeout(self,timeout=None):
+    def get_timeout(self,timeout:int=None) -> int:
+        """
+        return a timeout value, either the default or the passed in value.
+        :param timeout:value to use (if not None)
+        :return: timeout value
+        """
         if timeout == None:
             return self.timeout
         return timeout  
 
-    def get_error(self):
+    def get_error(self) -> str:
         """
         :return: The last error messageget_value
         """
         return self.error
 
-    def get_value(self, driver, reference=None,timeout=None):
+    def get_value(self, driver : webdriver , reference=None,timeout:int=None) -> str:
         """
         return the value of the specified element
         :param driver: Selenium Driver
@@ -77,7 +83,7 @@ class FieldInterface(object):
         """
         return self.get_element(driver, reference,timeout).text
 
-    def _get_element(self, driver, reference=None):
+    def _get_element(self, driver : webdriver, reference=None):
         """FieldNotFoundError
         low level implementation of get_element
         :param driver: Selenium Driver

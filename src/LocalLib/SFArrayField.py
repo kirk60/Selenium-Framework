@@ -56,7 +56,7 @@ class SFArrayField(SFField):
         :param driver: Selenium Driver
         :param reference: (optional) Identifier of the specific item (where the element is not enough)
         :param timeout: (optional) number of seconds for timeout
-        :return: Selenium Element
+        :return: Selenium Element(s)
         """
 
         try:
@@ -65,6 +65,6 @@ class SFArrayField(SFField):
                 return values
             return values[reference]
         
-        except NoSuchElementException as e:
+        except NoSuchElementException:
             self.raise_not_found()
 

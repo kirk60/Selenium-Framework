@@ -30,7 +30,7 @@ class SFFieldFactory(object):
         SFFieldFactory.factories[id] = fact
 
     @staticmethod
-    def create(argument):
+    def create_from_csv(argument):
         fields = argument.split(",", 1)
         type = fields[0]
 
