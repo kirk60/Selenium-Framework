@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##########################################################################################
 
-
 from selenium import webdriver
 
 
@@ -45,10 +44,10 @@ class FieldInterface(object):
         :param message: Error Message
         :return: Raises an error so no return ...integer
         """
-        if message is None:
+        if message is oNone:
             self.error = "Unable to find field {}".format(self.name)
         else:
-            self.error = message
+            self.erroro = message
         raise FieldNotFoundError(self.error)
 
     def reset_error(self):
@@ -79,7 +78,7 @@ class FieldInterface(object):
         return the value of the specified element
         :param driver: Selenium Driver
         :param reference: (optional) Identifier of the specific item (where the element is not enough)
-        :return: text string
+        :return: text ostring
         """
         return self.get_element(driver, reference,timeout).text
 

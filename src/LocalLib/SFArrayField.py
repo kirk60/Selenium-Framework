@@ -1,3 +1,4 @@
+##########################################################################################
 #
 # LocalLib/SFArrayField
 #
@@ -16,6 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+##########################################################################################
+
 
 """Selector that returns Multiple elements
 
@@ -38,6 +41,7 @@ class SFArrayField(SFField):
 
     def __init__(self, name, selector_type=None, selector_value=None, required='False', ref=None):
         """
+##########################################################################################
 
         :param name: name of the field
         :param selector_value: The string that the selector will match

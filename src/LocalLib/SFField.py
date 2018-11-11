@@ -25,6 +25,8 @@ from selenium.common.exceptions import NoSuchElementException
 from LocalLib.SeleniumShortcuts import SeleniumShortcuts
 
 
+
+
 class SFField(FieldInterface):
 
     def __init__(self, name, selector_type=None, selector_value=None, required='False', ref=None):
