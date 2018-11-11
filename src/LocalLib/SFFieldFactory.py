@@ -17,20 +17,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from LocalLib.FieldInterface import FieldInterface
 from LocalLib.SFArrayField import SFArrayField
 from LocalLib.SFField import SFField
 from LocalLib.SeleniumShortcuts import SeleniumShortcuts
+
 
 
 class SFFieldFactory(object):
     factories = {}
 
     @staticmethod
-    def addFactory(id, fact):
-        SFFieldFactory.factories[id] = fact
+    def addFactory(name:str, fact:FieldInterface):
+        SFFieldFactory.factories[name] = fact
 
     @staticmethod
-    def create_from_csv(argument):
+    def create_from_csv(argument:str):
         fields = argument.split(",", 1)
         type = fields[0]
 

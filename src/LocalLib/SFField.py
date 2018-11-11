@@ -23,11 +23,12 @@
 from LocalLib.FieldInterface import FieldInterface
 from selenium.common.exceptions import NoSuchElementException
 from LocalLib.SeleniumShortcuts import SeleniumShortcuts
+from selenium import webdriver
 
 
 class SFField(FieldInterface):
 
-    def __init__(self, name, selector_type=None, selector_value=None, required='False', ref=None):
+    def __init__(self, name, selector_type:str=None, selector_value:str=None, required:str='False', ref:str=None):
         """
 
         :param name: name of the field
@@ -63,12 +64,12 @@ class SFField(FieldInterface):
         self.required = required
         self.ref = ref
 
-    def to_string(self,name =None):
+    def to_string(self,name:str =None):
         if name is None:
             name = "SFField"
         return "{} : {},{},{},{},{},".format(name,self.name, self.selector_type, self.selector_value, self.required, self.ref)
 
-    def _get_element(self, driver, reference=None):
+    def _get_element(self, driver:webdriver, reference=None):
         """
         return the specified element
         :param driver: Selenium Driver

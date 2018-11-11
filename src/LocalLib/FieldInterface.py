@@ -17,11 +17,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##########################################################################################
 
-
 from selenium import webdriver
+from selenium.webdriver.remote.webelement import WebElement
+ 
 
 
 class FieldNotFoundError(Exception):
+
     def __init__(self, message:str):
         super().__init__(message)
 
@@ -30,8 +32,8 @@ class FieldInterface(object):
     error = None
     def_timeout = 0
 
-    def __init__(self, name:str,timeout:int=None):
-        self.name = name
+    def __init__(self, name:str, timeout:int=None):
+        self.name:str = name
         self.reset_error()
 
         if timeout == None: 
@@ -58,7 +60,7 @@ class FieldInterface(object):
         """
         self.error = None
         
-    def get_timeout(self,timeout:int=None) -> int:
+    def get_timeout(self, timeout:int=None) -> int:
         """
         return a timeout value, either the default or the passed in value.
         :param timeout:value to use (if not None)
@@ -74,16 +76,16 @@ class FieldInterface(object):
         """
         return self.error
 
-    def get_value(self, driver : webdriver , reference=None,timeout:int=None) -> str:
+    def get_value(self, driver : webdriver , reference=None, timeout:int=None) -> str:
         """
         return the value of the specified element
         :param driver: Selenium Driver
         :param reference: (optional) Identifier of the specific item (where the element is not enough)
         :return: text string
         """
-        return self.get_element(driver, reference,timeout).text
+        return self.get_element(driver, reference, timeout).text
 
-    def _get_element(self, driver : webdriver, reference=None):
+    def _get_element(self, driver : webdriver, reference=None)-> WebElement :
         """FieldNotFoundError
         low level implementation of get_element
         :param driver: Selenium Driver
@@ -92,8 +94,7 @@ class FieldInterface(object):
         """
         raise NotImplementedError()
 
-
-    def get_element(self, driver, reference=None,timeout=None):
+    def get_element(self, driver : webdriver, reference=None, timeout:int=None) -> WebElement:
         """
         return the specified element
         :param driver: Selenium Driver
@@ -103,18 +104,18 @@ class FieldInterface(object):
         """
         self.reset_error()
 
-        working_timeout = self.get_timeout(timeout)
+        working_timeout:int = self.get_timeout(timeout)
         if working_timeout != 0 :
             driver.implicitly_wait(self.get_timeout(timeout))
 
-        ret_val = self._get_element( driver, reference)
+        ret_val = self._get_element(driver, reference)
         
         if working_timeout != 0 :
             driver.implicitly_wait(0)
         
         return ret_val
 
-    def is_valid(self, driver, reference=None,timeout=None):
+    def is_valid(self, driver :webdriver, reference=None, timeout:int=None):
         """
         Check the validity of the field.
         If getting the field value returns an error (other than NotFound) then
@@ -124,7 +125,7 @@ class FieldInterface(object):
         :return: True if field is valid, False otherwise
         """
         try:
-            self.get_element(driver, reference,timeout)
+            self.get_element(driver, reference, timeout)
         except FieldNotFoundError:
             return False
 
