@@ -21,6 +21,7 @@
 
 
 import selenium.webdriver.common.by
+from typing import List
 
 class SeleniumShortcuts(object):
 
@@ -37,19 +38,19 @@ class SeleniumShortcuts(object):
 
 
     @staticmethod
-    def is_selector(sel):
+    def is_selector(sel:str)-> bool:
         return sel in SeleniumShortcuts.selector_map.values()
 
     @staticmethod
-    def all_selectors_long():
+    def all_selectors_long() -> List[str]:
         return SeleniumShortcuts.selector_map.values()
 
     @staticmethod
-    def all_selectors_short():
+    def all_selectors_short()  -> List[str]:
         return SeleniumShortcuts.selector_map.keys()
 
     @staticmethod
-    def get_selector(name):
+    def get_selector(name:str) -> str:
         if name in SeleniumShortcuts.all_selectors_short():
             return SeleniumShortcuts.selector_map[name]
 

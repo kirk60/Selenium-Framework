@@ -22,6 +22,7 @@
 
 from LocalLib.FieldInterface import FieldInterface
 from LocalLib.FieldInterface import FieldNotFoundError
+from selenium import webdriver
 
 import pytest
 
@@ -32,7 +33,7 @@ class MockFieldInterface(FieldInterface):
     def set_get_value(self, value , timeout = None):
         self.text = value
 
-    def _get_element(self, driver, reference=None,timeout=None):
+    def _get_element(self, driver:webdriver, reference=None,timeout:int=None):
     #
     #    The tests require that the return object implements a text
     #    field (like a Selenium element does :-)
